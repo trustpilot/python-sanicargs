@@ -1,0 +1,24 @@
+sudo: required
+addons:
+  apt_packages:
+    - pandoc
+
+language: python
+
+python:
+- '3.6'
+
+
+install:
+- pip install pypandoc
+script:
+- tox
+branches:
+  only: master
+
+after_success:
+  - git config --global user.email "travis@travis-ci.org"
+  - git config --global user.name "Travis"
+  - git tag -a v$(python setup.py --version) -m "Travis build $TRAVIS_BUILD_NUMBER pushed a tag."
+  - git push origin --tags
+  - git fetch origin
