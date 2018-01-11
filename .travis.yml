@@ -8,7 +8,7 @@ python:
 install:
 - pip install pypandoc
 script:
-- tox
+- py.test
 branches:
   only: master
 after_success:
