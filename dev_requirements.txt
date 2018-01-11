@@ -1,2 +1,0 @@
-pytest-sanic==0.1.6
-sanic==0.7.0

@@ -1,24 +1,51 @@
 sudo: required
 addons:
   apt_packages:
-    - pandoc
-
+  - pandoc
 language: python
-
 python:
 - '3.6'
-
-
 install:
 - pip install pypandoc
 script:
 - tox
 branches:
   only: master
-
 after_success:
-  - git config --global user.email "travis@travis-ci.org"
-  - git config --global user.name "Travis"
-  - git tag -a v$(python setup.py --version) -m "Travis build $TRAVIS_BUILD_NUMBER pushed a tag."
-  - git push origin --tags
-  - git fetch origin
+- git config --global user.email "travis@travis-ci.org"
+- git config --global user.name "Travis"
+- git tag -a v$(python setup.py --version) -m "Travis build $TRAVIS_BUILD_NUMBER pushed
+  a tag."
+- git push origin --tags
+- git fetch origin
+
+deploy:
+  provider: releases
+  api_key:
+    secure: E9Q27QCUrW2qspYAhwy7kIwt+TENdr6yhBEIlTGd6s2QaF9KmBn7d7ouLQ+93sV/yISajArlagblPifZLm9mXnvs5BeIA7Dy/EbXgYN1b62iRpOqGCKZ4PaUino8fQXdKgcqWEovIC7PpER/h0g0o2nPULqHADohL2CsGeVXGekfRuvffnQrbcJcfsJtS3Px+u39OhU2s/o718U8XNShDT4OZgJBkn0V+1Toc3ZwBwsZs9bvLVC4keJHTKNwGwG1CyZOzdrp/TizZdrXtjpnA9Dk8jo2Fa1DPDGAnG8ORogz722RCou5PHVQiRnrbRPOuyhPYZe5R97NBi1omMuKXRneLyxUSqfz09nON4Jbah7qb3wtgUX7dSV1XdiBx/mB9bDiIc85RqW+FQJZqxvZU76JDrccPIricaHM05Md/HXtRYAFmcgmhRrwifW2++NRiosX66HocmdyIMQj9TNhIOAe8IeBVub011b++jlEzbN1xHEO26zGGHN9SHfNlj8nyWhojvU56pEv2w/0DSJyRiIbAdTet03u2uF1nEPYJEZB81sJjhrq1vY5aMibCRmElUzmo1RIrrE6a3vy5bFL6unYUFPmcO4hfWDj0TYpnfUkB73Vjjgv83eUM1MW2DoA4AgUk7dl1BE5kRXdO0a9FAqo9MBXNKRAeScdmC/rIkE=
+  file: dist/*
+  on:
+    repo: trustpilot/python-sanicargs
+
+
+deploy:
+  - provider: pypi
+    skip_cleanup: true
+    distributions: sdist
+    user: "trustpilot"
+    password:
+      secure: iMb/28iA912+TelMnZ18iVL32DBfohHpQ8I3WpPtscTChMpd7j2924ECwI6mwlBlgxYb4lD0jFvtN/wRCcvUlBZ8aXamXQCqe/IDzxQz+GXrC+pJYj34C8cdA7r6be1A9N/0MbD2WHLb/VxQK8cssATOUkbHvdF0pfbFc/V6oXiFIyBn88aphGnFaoDWlVH4THYf7SSIoiiyn+n82xEUfy9pfSYlaHiiXzb3Kcql2ORpFzLK0PBoU2FtXX94HQWHJADu0ruzYSSdkHoWxZ2px5w7VEdvf58JmupNDc43o8NEiUaULyxEzCRHsPRpd6HahvCGuLDcnhQ5lIvOmkgpawnZQYvUSYANQvd/1K67MShkASgVrZmNAPhnh1x66UqatF1uE5TrNCsS2UFk7tx2yB9671NFFbVgdpshX+M+PlO+gRCinBanWVKUjRiujhlKNJdadWGoU4S09li6w9Jz17XFLegLqt/3Q//Hnq/kABoIFAqKlTDiPsp+QxZLTPO7OcqruDnd+v9Dg4QOfLoE/VKq7Al60i81HzK8Pcjy7GhPZtVNQpsu3E3BjTl3041j/vp1DOHy2Vt6N8OJLJTUnE74oR/zBTyP9WD7tJzn7376/8wmTh4KqPm/i/zzHroolCIK34OQlhoigYavT1DFidGKS53HfTFf3IP+0M9nfmU=
+    on:
+      tags: false
+      branch: master
+      condition: $TRAVIS_PYTHON_VERSION = "3.6"
+  - provider: releases
+    skip_cleanup: true
+    api-key:
+      secure: E9Q27QCUrW2qspYAhwy7kIwt+TENdr6yhBEIlTGd6s2QaF9KmBn7d7ouLQ+93sV/yISajArlagblPifZLm9mXnvs5BeIA7Dy/EbXgYN1b62iRpOqGCKZ4PaUino8fQXdKgcqWEovIC7PpER/h0g0o2nPULqHADohL2CsGeVXGekfRuvffnQrbcJcfsJtS3Px+u39OhU2s/o718U8XNShDT4OZgJBkn0V+1Toc3ZwBwsZs9bvLVC4keJHTKNwGwG1CyZOzdrp/TizZdrXtjpnA9Dk8jo2Fa1DPDGAnG8ORogz722RCou5PHVQiRnrbRPOuyhPYZe5R97NBi1omMuKXRneLyxUSqfz09nON4Jbah7qb3wtgUX7dSV1XdiBx/mB9bDiIc85RqW+FQJZqxvZU76JDrccPIricaHM05Md/HXtRYAFmcgmhRrwifW2++NRiosX66HocmdyIMQj9TNhIOAe8IeBVub011b++jlEzbN1xHEO26zGGHN9SHfNlj8nyWhojvU56pEv2w/0DSJyRiIbAdTet03u2uF1nEPYJEZB81sJjhrq1vY5aMibCRmElUzmo1RIrrE6a3vy5bFL6unYUFPmcO4hfWDj0TYpnfUkB73Vjjgv83eUM1MW2DoA4AgUk7dl1BE5kRXdO0a9FAqo9MBXNKRAeScdmC/rIkE=
+    file_glob: true
+    file: dist/*
+    on:
+      tags: false
+      branch: master
+      condition: $TRAVIS_PYTHON_VERSION = "3.6"
