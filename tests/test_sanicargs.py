@@ -34,12 +34,12 @@ def app():
 
     @app.route("/list", methods=['GET'])
     @parse_query_args
-    async def test_int(request, test: fields.List[str] = None):
+    async def test_list(request, test: fields.List[str] = None):
         return response.json({'test': test})
 
     @app.route("/all", methods=['GET'])
     @parse_query_args
-    async def test_int(
+    async def test_all(
             request, 
             a: int,
             b: str,
@@ -103,14 +103,14 @@ async def test_parse_datetime_fail(test_cli):
     assert resp.status == 400
 
 
-async def test_parse_datetime_success(test_cli):
+async def test_parse_date_success(test_cli):
     resp = await test_cli.get('/date?test=2017-10-10')
     assert resp.status == 200
     resp_json = await resp.json()
     assert resp_json == {'test': '2017-10-10'}
 
 
-async def test_parse_datetime_fail(test_cli):
+async def test_parse_date_fail(test_cli):
     resp = await test_cli.get('/date?test=not a datetime')
     assert resp.status == 400
    
