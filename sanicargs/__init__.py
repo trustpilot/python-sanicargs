@@ -8,10 +8,10 @@ from sanicargs.fields import List
 
 from logging import getLogger
 
-logger = getLogger('sonicargs')
+__logger = getLogger('sanicargs')
 
 
-def parse_datetime(str):
+def __parse_datetime(str):
     # attempt full date time, but tolerate just a date
     try:
         return datetime.datetime.strptime(str, '%Y-%m-%dT%H:%M:%S')
@@ -19,14 +19,14 @@ def parse_datetime(str):
         pass
     return datetime.datetime.strptime(str, '%Y-%m-%d')
 
-def parse_date(str):
+def __parse_date(str):
     return datetime.datetime.strptime(str, '%Y-%m-%d').date()
 
-type_deserializers = {
+__type_deserializers = {
     int: int,
     str: str,
-    datetime.datetime: parse_datetime,
-    datetime.date: parse_date,
+    datetime.datetime: __parse_datetime,
+    datetime.date: __parse_date,
     List[str]: lambda s: s.split(',')
 }
 
@@ -54,12 +54,16 @@ def parse_query_args(func):
         name = None
         try:
             for name, arg_type, default in parameters:
+                raw_value = request.args.get(name, None)
+
                 # provided in route
                 if name in route_parameters or name=="request":
-                    continue
+                    if name=="request":
+                        continue
+                    raw_value = route_parameters[name]
 
                 # no value
-                if name not in request.args:
+                elif name not in request.args:
                     if default != inspect._empty:
                         # TODO clone?
                         kwargs[name] = default
@@ -67,13 +71,10 @@ def parse_query_args(func):
                     else:
                         raise KeyError("Missing required argument %s" % name)
 
-                raw_value = request.args[name][0]
-                parsed_value = type_deserializers[arg_type](raw_value)
+                parsed_value = __type_deserializers[arg_type](raw_value)
                 kwargs[name] = parsed_value
-
-            kwargs.update(route_parameters)
         except Exception as err: 
-            logger.warning({
+            __logger.warning({
                 "message": "Request args not validated",
                 "stacktrace": str(err)
             })
