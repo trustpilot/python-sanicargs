@@ -11,7 +11,7 @@ $ pip install sanicargs
 
 ## Usage
 
-Use the `parse_query_args` decorator with [Sanic](https://github.com/channelcat/sanic)'s routes or blueprints like in the [example](https://github.com/trustpilot/python-sanicargs/tree/master/examples/simple.py) below:
+Use the `parse_query_args` decorator to parse query args and type cast query args and path params with [Sanic](https://github.com/channelcat/sanic)'s routes or blueprints like in the [example](https://github.com/trustpilot/python-sanicargs/tree/master/examples/simple.py) below:
 
 ```python
 import datetime
