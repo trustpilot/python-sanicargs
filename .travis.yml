@@ -9,7 +9,8 @@ install:
 - pip install pypandoc
 - pip install .[test]
 script:
-- py.test
+- prospector -M
+- pytest
 branches:
   only: master
 after_success:

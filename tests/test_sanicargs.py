@@ -61,7 +61,7 @@ def app():
 
     @app.route("/with/<path_param>/path_params", methods=['GET'])
     @parse_query_args
-    async def test_optional(request, path_param: int, test: str, test_2: int=35):
+    async def test_path_params(request, path_param: int, test: str, test_2: int=35):
         return response.json({'path_param': path_param, 'test': test, 'test_2': test_2})
 
     yield app
