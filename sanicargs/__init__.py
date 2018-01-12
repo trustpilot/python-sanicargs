@@ -8,7 +8,7 @@ from sanicargs.fields import List
 
 from logging import getLogger
 
-__logger = getLogger('sonicargs')
+__logger = getLogger('sanicargs')
 
 
 def __parse_datetime(str):
