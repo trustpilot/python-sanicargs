@@ -54,6 +54,16 @@ def app():
             'e': e
         })
 
+    @app.route("/optional", methods=['GET'])
+    @parse_query_args
+    async def test_optional(request, test: str = 'helloworld'):
+        return response.json({'test': test})
+
+    @app.route("/with/<path_param>/path_params", methods=['GET'])
+    @parse_query_args
+    async def test_optional(request, path_param: int, test: str, test_2: int=35):
+        return response.json({'path_param': path_param, 'test': test, 'test_2': test_2})
+
     yield app
 
 @pytest.fixture
@@ -64,6 +74,7 @@ def test_cli(loop, app, test_client):
 #########
 # Tests #
 #########
+
 
 async def test_parse_int_success(test_cli):
     resp = await test_cli.get('/int?test=10')
@@ -132,6 +143,7 @@ async def test_parse_list_also_works_with_singular(test_cli):
       'not a datetime'
     ]}
 
+
 async def test_all_at_once(test_cli):
     resp = await test_cli.get('/all?a=10&b=test&c=2017-10-10T10:10:10&d=2017-10-10&e=a,b,c,d,e')
     assert resp.status == 200
@@ -145,3 +157,22 @@ async def test_all_at_once(test_cli):
         'a', 'b', 'c', 'd', 'e'
       ]
     )
+
+
+async def test_optional(test_cli):
+    resp = await test_cli.get('/optional')
+    assert resp.status == 200
+    resp_json = await resp.json()
+    assert resp_json == {'test': 'helloworld'}
+
+
+async def test_mandatory(test_cli):
+    resp = await test_cli.get('/str')
+    assert resp.status == 400
+
+
+async def test_with_path_params(test_cli):
+    resp = await test_cli.get('/with/123/path_params?test=hello')
+    assert resp.status == 200
+    resp_json = await resp.json()
+    assert resp_json == {'path_param': 123, 'test': 'hello', 'test_2': 35}
