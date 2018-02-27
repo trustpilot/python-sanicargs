@@ -5,6 +5,8 @@ from sanic import response, Sanic
 from sanicargs import parse_query_args, fields
 from sanic.websocket import WebSocketProtocol
 from sanic.exceptions import InvalidUsage
+from sanic import request
+
 import datetime
 
 
@@ -34,13 +36,13 @@ def app():
 
     @app.route("/list", methods=['GET'])
     @parse_query_args
-    async def test_list(request, test: fields.List[str] = None):
+    async def test_list(req, test: fields.List[str] = None):
         return response.json({'test': test})
 
     @app.route("/all", methods=['GET'])
     @parse_query_args
     async def test_all(
-            request, 
+            req: request, 
             a: int,
             b: str,
             c: datetime.datetime,
