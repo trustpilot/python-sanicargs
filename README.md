@@ -22,7 +22,7 @@ app = Sanic("test_sanic_app")
 
 @app.route("/me/<id>/birthdate", methods=['GET'])
 @parse_query_args
-async def test_datetime(request, id: str, birthdate: datetime.datetime):
+async def test_datetime(req, id: str, birthdate: datetime.datetime):
     return response.json({
         'id': id, 
         'birthdate': birthdate.isoformat()
@@ -53,4 +53,6 @@ You need to apply the `parse_query_args` decorator as the first one executed whi
 
 ### `request` is mandatory!
 
-You should always have request as the first argument in your function in order to use `parse_query_args`
+You should always have request as the first argument in your function in order to use `parse_query_args`.
+
+**Note** that `request` arg can be renamed and even type-annotated as long as it is the first arg.

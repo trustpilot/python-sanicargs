@@ -11,3 +11,8 @@ History
 
 * added test suite
 * added path_param type casting
+
+1.1.0(2018-03-01)
+------------------
+
+* request can be renamed and even type-annotated
