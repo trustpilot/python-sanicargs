@@ -48,6 +48,8 @@ def parse_query_args(func):
         (name, p.annotation, p.default)
         for name, p in notations.parameters.items()
     ]
+    request_arg_name = inspect.getfullargspec(func)[0][0]
+
     
     async def inner(request, *old_args, **route_parameters):
         kwargs = {}
@@ -57,8 +59,8 @@ def parse_query_args(func):
                 raw_value = request.args.get(name, None)
 
                 # provided in route
-                if name in route_parameters or name=="request":
-                    if name=="request":
+                if name in route_parameters or name==request_arg_name:
+                    if name==request_arg_name:
                         continue
                     raw_value = route_parameters[name]
 
