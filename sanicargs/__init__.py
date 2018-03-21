@@ -15,12 +15,14 @@ def __parse_datetime(str):
     # attempt full date time, but tolerate just a date
     try:
         return datetime.datetime.strptime(str, '%Y-%m-%dT%H:%M:%S')
-    except:
+    except Exception:
         pass
     return datetime.datetime.strptime(str, '%Y-%m-%d')
 
+
 def __parse_date(str):
     return datetime.datetime.strptime(str, '%Y-%m-%d').date()
+
 
 def __parse_bool(str):
     lower = str.lower()
@@ -30,6 +32,7 @@ def __parse_bool(str):
         return False
     raise ValueError("Can't parse {} as boolean".format(str))
 
+
 __type_deserializers = {
     bool: __parse_bool,
     int: int,
@@ -38,6 +41,7 @@ __type_deserializers = {
     datetime.date: __parse_date,
     List[str]: lambda s: s.split(',')
 }
+
 
 def parse_query_args(func):
     '''parses query args and validates, deserializes them

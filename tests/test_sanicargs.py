@@ -26,7 +26,7 @@ def app():
 
     @app.route("/bool", methods=['GET'])
     @parse_query_args
-    async def test_datetime(request, test: bool):
+    async def test_bool(request, test: bool):
         return response.json({'test': test})
 
     @app.route("/datetime", methods=['GET'])
