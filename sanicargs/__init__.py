@@ -22,7 +22,16 @@ def __parse_datetime(str):
 def __parse_date(str):
     return datetime.datetime.strptime(str, '%Y-%m-%d').date()
 
+def __parse_bool(str):
+    lower = str.lower()
+    if lower == 'true':
+        return True
+    if lower == 'false':
+        return False
+    raise ValueError("Can't parse {} as boolean".format(str))
+
 __type_deserializers = {
+    bool: __parse_bool,
     int: int,
     str: str,
     datetime.datetime: __parse_datetime,

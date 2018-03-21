@@ -24,6 +24,11 @@ def app():
     async def test_str(request, test: str):
         return response.json({'test': test})
 
+    @app.route("/bool", methods=['GET'])
+    @parse_query_args
+    async def test_datetime(request, test: bool):
+        return response.json({'test': test})
+
     @app.route("/datetime", methods=['GET'])
     @parse_query_args
     async def test_datetime(request, test: datetime.datetime):
@@ -87,6 +92,23 @@ async def test_parse_int_success(test_cli):
 
 async def test_parse_int_fail(test_cli):
     resp = await test_cli.get('/int?test=not an integer')
+    assert resp.status == 400
+
+
+async def test_parse_bool_true_success(test_cli):
+    resp = await test_cli.get('/bool?test=true')
+    assert resp.status == 200
+    resp_json = await resp.json()
+    assert resp_json == {'test': True }
+
+async def test_parse_bool_false_success(test_cli):
+    resp = await test_cli.get('/bool?test=false')
+    assert resp.status == 200
+    resp_json = await resp.json()
+    assert resp_json == {'test': False }
+
+async def test_parse_bool_fail(test_cli):
+    resp = await test_cli.get('/bool?test=not an bool')
     assert resp.status == 400
 
 
