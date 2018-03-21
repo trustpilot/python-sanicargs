@@ -16,3 +16,8 @@ History
 ------------------
 
 * request can be renamed and even type-annotated
+
+1.2.0 (2018-03-01)
+------------------
+
+* added support for boolean parameters
