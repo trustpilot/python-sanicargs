@@ -41,6 +41,7 @@ $ curl 'http://0.0.0.0:8080/me/123/birthdate?birthdate=2017-10-30'
 
 * **str** : `ex: ?message=hello world`
 * **int** : `ex: ?age=100`
+* **bool** : `ex: ?missing=false`
 * **datetime.datetime** : `ex: ?currentdate=2017-10-30T10:10:30 or 2017-10-30`
 * **datetime.date** : `ex: ?birthdate=2017-10-30`
 * **List[str]** : `ex: ?words=you,me,them,we`
