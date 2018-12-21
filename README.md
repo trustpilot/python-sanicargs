@@ -46,6 +46,10 @@ $ curl 'http://0.0.0.0:8080/me/123/birthdate?birthdate=2017-10-30'
 * **datetime.date** : `ex: ?birthdate=2017-10-30`
 * **List[str]** : `ex: ?words=you,me,them,we`
 
+### Note about datetimes
+
+Dates and datetimes are parsed without timezone information giving you a "naive datetime" object. See the note on [datetime.timestamp()](https://docs.python.org/3/library/datetime.html#datetime.datetime.timestamp) about handling timezones if you require epoch format timestamps.
+
 ### Important notice about decorators
 
 The sequence of decorators is, as usual, important in Python.
