@@ -3,6 +3,9 @@
 # Sanicargs
 Parses query args in [Sanic](https://github.com/channelcat/sanic) using type annotations.
 
+## Survey
+Please fill out [this survey](https://docs.google.com/forms/d/e/1FAIpQLSdNLvB7NEJQhUyVdaZpBAgS0f1k9OywZp8xDqhaNY0rl-unZA/viewform?usp=sf_link) if you are using Sanicargs, we are gathering feedback :-)
+
 ## Install
 Install with pip
 ```
