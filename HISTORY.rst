@@ -21,3 +21,8 @@ History
 ------------------
 
 * added support for boolean parameters
+
+1.3.0 (2019-01-08)
+------------------
+
+* @wraps the inner function to keep the args signature
