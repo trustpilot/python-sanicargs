@@ -22,7 +22,6 @@ requirements = [
 
 test_requirements = [
     'pytest==3.2.0',
-    'prospector==0.12.7',
     'pytest-sanic==0.1.6'
 ]
 
