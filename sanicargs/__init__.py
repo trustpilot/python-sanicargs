@@ -1,5 +1,6 @@
 import inspect
 import datetime
+from functools import wraps
 
 from sanic import response
 from sanic.exceptions import abort
@@ -62,8 +63,8 @@ def parse_query_args(func):
         for name, p in notations.parameters.items()
     ]
     request_arg_name = inspect.getfullargspec(func)[0][0]
-
     
+    @wraps(func)
     async def inner(request, *old_args, **route_parameters):
         kwargs = {}
         name = None

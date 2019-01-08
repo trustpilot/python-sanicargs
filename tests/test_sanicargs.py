@@ -9,6 +9,17 @@ from sanic import request
 
 import datetime
 
+from functools import wraps
+import inspect
+
+def has_test_arg(func):
+    signature = inspect.signature(func)
+    assert signature.parameters['test']
+    @wraps(func)
+    async def decorated(request, *args, **kwargs):
+        return await func(request, *args, **kwargs)
+    return decorated
+
 
 @pytest.yield_fixture
 def app():
@@ -70,6 +81,12 @@ def app():
     @parse_query_args
     async def test_path_params(request, path_param: int, test: str, test_2: int=35):
         return response.json({'path_param': path_param, 'test': test, 'test_2': test_2})
+
+    @app.route("/test_arg", methods=['GET'])
+    @has_test_arg
+    @parse_query_args
+    async def test_args(request, test: int):
+        return response.json({'test': test})
 
     yield app
 
@@ -200,3 +217,9 @@ async def test_with_path_params(test_cli):
     assert resp.status == 200
     resp_json = await resp.json()
     assert resp_json == {'path_param': 123, 'test': 'hello', 'test_2': 35}
+
+async def test_args_success(test_cli):
+    resp = await test_cli.get('/test_arg?test=10')
+    assert resp.status == 200
+    resp_json = await resp.json()
+    assert resp_json == {'test': 10}
