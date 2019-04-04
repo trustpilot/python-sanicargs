@@ -26,3 +26,8 @@ History
 ------------------
 
 * @wraps the inner function to keep the args signature
+
+1.4.0 (2019-03-04)
+------------------
+
+* Update deps to allow latest version of sanic

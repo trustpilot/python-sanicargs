@@ -17,12 +17,12 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'sanic==0.7.0'
+    'sanic>=0.7.0'
 ]
 
 test_requirements = [
     'pytest==3.2.0',
-    'pytest-sanic==0.1.6'
+    'pytest-sanic>=0.1.6'
 ]
 
 extras = {
