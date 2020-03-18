@@ -14,11 +14,10 @@ install:
 script:
   - poetry run black --check .
   - poetry run pytest -vvv tests
-  - poetry build
 
 deploy:
   provider: script
-  script: poetry publish
+  script: poetry publish --build
   on:
     branch: master
 
