@@ -37,3 +37,7 @@
 # 2.0.2 (2020-03-18)
 
 - Log `raw_value` if parsing is failing
+
+# 2.0.3 (2020-03-18)
+
+- re-release version since @sloev reacted a little too fast on deleting a release
