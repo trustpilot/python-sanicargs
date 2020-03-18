@@ -12,12 +12,12 @@ from logging import getLogger
 __logger = getLogger("sanicargs")
 
 
-def __parse_datetime(str):
-    return ciso8601.parse_datetime_as_naive(str)
+def __parse_datetime(date_string):
+    return ciso8601.parse_datetime_as_naive(date_string)
 
 
-def __parse_date(str):
-    return ciso8601.parse_datetime_as_naive(str).date()
+def __parse_date(date_string):
+    return ciso8601.parse_datetime_as_naive(date_string).date()
 
 
 def __parse_bool(str):
@@ -85,7 +85,12 @@ def parse_query_args(func):
                 kwargs[name] = parsed_value
         except Exception as err:
             __logger.warning(
-                {"message": "Request args not validated", "stacktrace": str(err)}
+                {
+                    "message": "Request args not validated",
+                    "name": name,
+                    "raw_value": raw_value,
+                    "stacktrace": str(err),
+                }
             )
             return abort(400, "Bad or missing value for %s" % name)
         return await func(request, **kwargs)
