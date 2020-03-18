@@ -31,3 +31,9 @@ History
 ------------------
 
 * Update deps to allow latest version of sanic
+
+2.0.0 (2020-03-18)
+------------------
+
+* Require `sanic >= 18.12` (LTS)
+* Use `ciso8601` to parse date

@@ -1,35 +1,30 @@
 import inspect
-import datetime
 from functools import wraps
+import ciso8601
+import datetime
 
 from sanic import response
 from sanic.exceptions import abort
-
 from sanicargs.fields import List
 
 from logging import getLogger
 
-__logger = getLogger('sanicargs')
+__logger = getLogger("sanicargs")
 
 
 def __parse_datetime(str):
-    # attempt full date time, but tolerate just a date
-    try:
-        return datetime.datetime.strptime(str, '%Y-%m-%dT%H:%M:%S')
-    except Exception:
-        pass
-    return datetime.datetime.strptime(str, '%Y-%m-%d')
+    return ciso8601.parse_datetime_as_naive(str)
 
 
 def __parse_date(str):
-    return datetime.datetime.strptime(str, '%Y-%m-%d').date()
+    return ciso8601.parse_datetime_as_naive(str).date()
 
 
 def __parse_bool(str):
     lower = str.lower()
-    if lower == 'true':
+    if lower == "true":
         return True
-    if lower == 'false':
+    if lower == "false":
         return False
     raise ValueError("Can't parse {} as boolean".format(str))
 
@@ -40,12 +35,12 @@ __type_deserializers = {
     str: str,
     datetime.datetime: __parse_datetime,
     datetime.date: __parse_date,
-    List[str]: lambda s: s.split(',')
+    List[str]: lambda s: s.split(","),
 }
 
 
 def parse_query_args(func):
-    '''parses query args and validates, deserializes them
+    """parses query args and validates, deserializes them
     VERY IMPORTANT!:
     to use this decorator it must be used in a Sanic endpoint and used BEFORE the 
     sanic blueprint decorator like so:
@@ -55,17 +50,17 @@ def parse_query_args(func):
     and the signature of the function needs to start with request and the rest of 
     the parameters need type hints like so:
         async def generate_csv(request, query: str, businessunitid: str):
-    '''
+    """
     notations = inspect.signature(func)
 
     parameters = [
-        (name, p.annotation, p.default)
-        for name, p in notations.parameters.items()
+        (name, p.annotation, p.default) for name, p in notations.parameters.items()
     ]
     request_arg_name = inspect.getfullargspec(func)[0][0]
-    
+
     @wraps(func)
     async def inner(request, *old_args, **route_parameters):
+        print(request.args)
         kwargs = {}
         name = None
         try:
@@ -73,8 +68,8 @@ def parse_query_args(func):
                 raw_value = request.args.get(name, None)
 
                 # provided in route
-                if name in route_parameters or name==request_arg_name:
-                    if name==request_arg_name:
+                if name in route_parameters or name == request_arg_name:
+                    if name == request_arg_name:
                         continue
                     raw_value = route_parameters[name]
 
@@ -89,11 +84,11 @@ def parse_query_args(func):
 
                 parsed_value = __type_deserializers[arg_type](raw_value)
                 kwargs[name] = parsed_value
-        except Exception as err: 
-            __logger.warning({
-                "message": "Request args not validated",
-                "stacktrace": str(err)
-            })
-            return abort(400, 'Bad or missing value for %s' % name)
+        except Exception as err:
+            __logger.warning(
+                {"message": "Request args not validated", "stacktrace": str(err)}
+            )
+            return abort(400, "Bad or missing value for %s" % name)
         return await func(request, **kwargs)
+
     return inner
