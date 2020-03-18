@@ -236,4 +236,3 @@ async def test_args_success(test_cli):
     assert resp.status == 200
     resp_json = await resp.json()
     assert resp_json == {"test": 10}
-
