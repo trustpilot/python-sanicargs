@@ -60,7 +60,6 @@ def parse_query_args(func):
 
     @wraps(func)
     async def inner(request, *old_args, **route_parameters):
-        print(request.args)
         kwargs = {}
         name = None
         try:

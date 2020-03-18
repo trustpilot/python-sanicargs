@@ -29,3 +29,7 @@
 
 - Require `sanic >= 18.12` (LTS)
 - Use `ciso8601` to parse date
+
+# 2.0.1 (2020-03-18)
+
+- Remove forgotten `print` statement
