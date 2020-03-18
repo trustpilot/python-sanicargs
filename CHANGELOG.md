@@ -33,3 +33,7 @@
 # 2.0.1 (2020-03-18)
 
 - Remove forgotten `print` statement
+
+# 2.0.2 (2020-03-18)
+
+- Log `raw_value` if parsing is failing

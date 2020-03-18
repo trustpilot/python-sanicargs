@@ -172,10 +172,10 @@ async def test_parse_datetime_fail(test_cli):
 
 
 async def test_parse_date_success(test_cli):
-    resp = await test_cli.get("/date?test=2017-10-10")
+    resp = await test_cli.get("/date?test=2017-10-19")
     assert resp.status == 200
     resp_json = await resp.json()
-    assert resp_json == {"test": "2017-10-10"}
+    assert resp_json == {"test": "2017-10-19"}
 
 
 async def test_parse_date_fail(test_cli):
