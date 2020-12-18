@@ -23,11 +23,7 @@ def __parse_date(date_string):
 
 
 def __parse_bool(str_or_bool):
-    if str_or_bool == True:
-        return True
-    if str_or_bool == False:
-        return False
-    lower = str_or_bool.lower()
+    lower = str(str_or_bool).lower()
     if lower == "true":
         return True
     if lower == "false":
