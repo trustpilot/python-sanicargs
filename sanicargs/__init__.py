@@ -3,6 +3,7 @@ from functools import wraps
 import ciso8601
 import datetime
 import json
+import warnings
 
 from sanic import response
 from sanic.exceptions import abort
@@ -63,6 +64,10 @@ def parse_query_args(func):
     the parameters need type hints like so:
         async def generate_csv(request, query: str, businessunitid: str):
     """
+    warnings.warn(
+        "This decorator will be deprecated in the next major release",
+        DeprecationWarning,
+    )
     return parse(func, True)
 
 
