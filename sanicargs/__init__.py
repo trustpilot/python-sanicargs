@@ -64,7 +64,7 @@ def parse_query_args(func):
         "This decorator will be deprecated in the next major release",
         DeprecationWarning,
     )
-    return parse(func, True)
+    return __parse(func, True)
 
 
 def parse_parameters(func):
@@ -79,10 +79,10 @@ def parse_parameters(func):
     the parameters need type hints like so:
         async def generate_csv(request, query: str, businessunitid: str):
     """
-    return parse(func)
+    return __parse(func)
 
 
-def parse(func, legacy=False):
+def __parse(func, legacy=False):
     notations = inspect.signature(func)
 
     func_parameters = [
