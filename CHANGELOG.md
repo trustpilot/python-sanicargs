@@ -41,3 +41,8 @@
 # 2.0.3 (2020-03-18)
 
 - re-release version since @sloev reacted a little too fast on deleting a release
+
+# 2.1.0 (2020-12-18)
+
+- Add parse_parameters decorator to support both GET(query params) and POST(body params) requests
+- Start deprecated process of parse_query_args
