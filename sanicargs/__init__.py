@@ -101,10 +101,10 @@ def parse(func, legacy=False):
         if legacy or request.method == "GET":
             parameters = request.args
         else:
-            try:
-                parameters = json.loads(request.body)
-            except json.decoder.JSONDecodeError:
+            if request.body == b"":  # support empty body
                 parameters = {}
+            else:
+                parameters = json.loads(request.body)
 
         try:
             for name, arg_type, default in func_parameters:
