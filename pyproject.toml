@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "sanicargs"
-version = "2.0.4"
-description = "Parses query args in sanic using type annotations"
+version = "2.1.0"
+description = "Parses query args or body parameters in sanic using type annotations"
 readme = "README.md"
 keywords = ["sanicargs", "sanic", "query", "args", "type annotations"]
 authors = [
@@ -29,5 +29,5 @@ pytest-sanic = "^1.6.0"
 black = "^19.10b0"
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.1.4"]
 build-backend = "poetry.masonry.api"
