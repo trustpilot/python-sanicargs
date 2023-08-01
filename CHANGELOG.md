@@ -46,3 +46,8 @@
 
 - Add parse_parameters decorator to support both GET(query params) and POST(body params) requests
 - Start deprecated process of parse_query_args
+
+# 3.0.0 (2023-08-01)
+
+- Bump versions of everything
+- Depricate `parse_query_args`

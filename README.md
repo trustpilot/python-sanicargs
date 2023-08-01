@@ -75,8 +75,3 @@ You need to apply the `parse_parameters` decorator as the first one executed whi
 You should always have request as the first argument in your function in order to use `parse_parameters`.
 
 **Note** that `request` arg can be renamed and even type-annotated as long as it is the first arg.
-
-### `parse_query_args` deprecation
-
-`parse_query_args` will be deprecated in future version in favor of `parse_parameters`
-Currently it is still usable as a legacy decorator

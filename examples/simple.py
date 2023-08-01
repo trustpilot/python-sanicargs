@@ -1,12 +1,14 @@
 import datetime
+
 from sanic import Sanic, response
-from sanicargs import parse_query_args
+
+from sanicargs import parse_parameters
 
 app = Sanic("test_sanic_app")
 
 
 @app.route("/me/<id>/birthdate", methods=["GET"])
-@parse_query_args
+@parse_parameters
 async def test_datetime(request, id: str, birthdate: datetime.datetime):
     return response.json({"id": id, "birthdate": birthdate.isoformat()})
 
