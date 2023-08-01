@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/trustpilot/python-sanicargs.svg?branch=master)](https://travis-ci.org/trustpilot/python-sanicargs) [![Latest Version](https://img.shields.io/pypi/v/sanicargs.svg)](https://pypi.python.org/pypi/sanicargs) [![Python Support](https://img.shields.io/pypi/pyversions/sanicargs.svg)](https://pypi.python.org/pypi/sanicargs)
+[![Build Status](https://github.com/trustpilot/python-sanicargs/actions/workflows/tox.yaml/badge.svg)](https://github.com/trustpilot/python-sanicargs/actions/workflows/tox.yaml) [![Latest Version](https://img.shields.io/pypi/v/sanicargs.svg)](https://pypi.python.org/pypi/sanicargs) [![Python Support](https://img.shields.io/pypi/pyversions/sanicargs.svg)](https://pypi.python.org/pypi/sanicargs)
 
 # Sanicargs
 Parses query parameters and json body parameters for [Sanic](https://github.com/channelcat/sanic) using type annotations.
