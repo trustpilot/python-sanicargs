@@ -3,10 +3,8 @@ from functools import wraps
 import ciso8601
 import datetime
 import json
-import warnings
 
-from sanic import response
-from sanic.exceptions import abort
+from sanic.exceptions import BadRequest
 from sanicargs.fields import List
 
 from logging import getLogger
@@ -46,25 +44,6 @@ __type_deserializers = {
     datetime.date: __parse_date,
     List[str]: __parse_list,
 }
-
-
-def parse_query_args(func):
-    """parses query args and validates, deserializes them
-    VERY IMPORTANT!:
-    to use this decorator it must be used in a Sanic endpoint and used BEFORE the 
-    sanic blueprint decorator like so:
-        @blueprint.route("/foo/<businessunitid>/bar")
-        @authorize_business_unit
-        @parse_query_args
-    and the signature of the function needs to start with request and the rest of 
-    the parameters need type hints like so:
-        async def generate_csv(request, query: str, businessunitid: str):
-    """
-    warnings.warn(
-        "This decorator will be deprecated in the next major release",
-        DeprecationWarning,
-    )
-    return __parse(func, True)
 
 
 def parse_parameters(func):
@@ -134,7 +113,7 @@ def __parse(func, legacy=False):
                     "stacktrace": str(err),
                 }
             )
-            return abort(400, "Bad or missing value for %s" % name)
+            raise BadRequest(f"Bad or missing value for {name}")
         return await func(request, **kwargs)
 
     return inner

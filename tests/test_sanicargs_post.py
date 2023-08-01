@@ -1,9 +1,11 @@
+import uuid
+
 import pytest
 from sanic import response, Sanic
+from sanic_testing import TestManager
 
 from sanicargs import parse_parameters, fields
-from sanic.websocket import WebSocketProtocol
-from sanic.exceptions import InvalidUsage
+from sanic.server.protocols.websocket_protocol import WebSocketProtocol
 from sanic import request
 
 import datetime
@@ -24,9 +26,10 @@ def has_test_arg(func):
     return decorated
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def app():
-    app = Sanic("test_sanic_app")
+    app = Sanic(f"app_{uuid.uuid4().hex}")
+    TestManager(app)
 
     @app.route("/int", methods=["POST"])
     @parse_parameters
@@ -88,12 +91,8 @@ def app():
     async def test_args(request, test: int):
         return response.json({"test": test})
 
-    yield app
+    return app
 
-
-@pytest.fixture
-def test_cli(loop, app, test_client):
-    return loop.run_until_complete(test_client(app, protocol=WebSocketProtocol))
 
 
 #########
@@ -101,109 +100,99 @@ def test_cli(loop, app, test_client):
 #########
 
 
-async def test_parse_int_success(test_cli):
-    resp = await test_cli.post("/int", data=json.dumps({"test": 10}))
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": 10}
+def test_parse_int_success(app):
+    __, response = app.test_client.post("/int", data=json.dumps({"test": 10}))
+    assert response.status == 200
+    assert response.json == {"test": 10}
 
 
-async def test_parse_int_fail(test_cli):
-    resp = await test_cli.post("/int", data=json.dumps({"test": "not an integer"}))
-    assert resp.status == 400
+def test_parse_int_fail(app):
+    __, response = app.test_client.post("/int", data=json.dumps({"test": "not an integer"}))
+    assert response.status == 400
 
 
-async def test_parse_bool_true_success(test_cli):
-    resp = await test_cli.post("/bool", data=json.dumps({"test": True}))
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": True}
+def test_parse_bool_true_success(app):
+    __, response = app.test_client.post("/bool", data=json.dumps({"test": True}))
+    assert response.status == 200
+    assert response.json == {"test": True}
 
 
-async def test_parse_bool_false_success(test_cli):
-    resp = await test_cli.post("/bool", data=json.dumps({"test": False}))
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": False}
+def test_parse_bool_false_success(app):
+    __, response = app.test_client.post("/bool", data=json.dumps({"test": False}))
+    assert response.status == 200
+    assert response.json == {"test": False}
 
 
-async def test_parse_bool_fail(test_cli):
-    resp = await test_cli.post("/bool", data=json.dumps({"test": "not an bool"}))
-    assert resp.status == 400
+def test_parse_bool_fail(app):
+    __, response = app.test_client.post("/bool", data=json.dumps({"test": "not an bool"}))
+    assert response.status == 400
 
 
-async def test_parse_str_success(test_cli):
-    resp = await test_cli.post("/str", data=json.dumps({"test": "hello"}))
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": "hello"}
+def test_parse_str_success(app):
+    __, response = app.test_client.post("/str", data=json.dumps({"test": "hello"}))
+    assert response.status == 200
+    assert response.json == {"test": "hello"}
 
 
-async def test_parse_str_also_works_with_int(test_cli):
+def test_parse_str_also_works_with_int(app):
     """ allow strings to work as ints
     """
-    resp = await test_cli.post("/str", data=json.dumps({"test": "400"}))
-    assert resp.status == 200
+    __, response = app.test_client.post("/str", data=json.dumps({"test": "400"}))
+    assert response.status == 200
 
 
-async def test_parse_datetime_success(test_cli):
-    resp = await test_cli.post(
+def test_parse_datetime_success(app):
+    __, response = app.test_client.post(
         "/datetime", data=json.dumps({"test": "2017-10-10T10:10:10"})
     )
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": "2017-10-10T10:10:10"}
+    assert response.status == 200
+    assert response.json == {"test": "2017-10-10T10:10:10"}
 
 
-async def test_parse_datetime_fail(test_cli):
-    resp = await test_cli.post("/datetime", data=json.dumps({"test": "not a datetime"}))
-    assert resp.status == 400
+def test_parse_datetime_fail(app):
+    __, response = app.test_client.post("/datetime", data=json.dumps({"test": "not a datetime"}))
+    assert response.status == 400
 
 
-async def test_parse_date_success(test_cli):
-    resp = await test_cli.post("/date", data=json.dumps({"test": "2017-10-19"}))
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": "2017-10-19"}
+def test_parse_date_success(app):
+    __, response = app.test_client.post("/date", data=json.dumps({"test": "2017-10-19"}))
+    assert response.status == 200
+    assert response.json == {"test": "2017-10-19"}
 
 
-async def test_parse_date_fail(test_cli):
-    resp = await test_cli.post("/date", data=json.dumps({"test": "not a datetime"}))
-    assert resp.status == 400
+def test_parse_date_fail(app):
+    __, response = app.test_client.post("/date", data=json.dumps({"test": "not a datetime"}))
+    assert response.status == 400
 
 
-async def test_parse_string_list_success(test_cli):
-    resp = await test_cli.post("/list", data=json.dumps({"test": "one,two,three"}))
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": ["one", "two", "three"]}
+def test_parse_string_list_success(app):
+    __, response = app.test_client.post("/list", data=json.dumps({"test": "one,two,three"}))
+    assert response.status == 200
+    assert response.json == {"test": ["one", "two", "three"]}
 
 
-async def test_parse_list_success(test_cli):
-    resp = await test_cli.post(
+def test_parse_list_success(app):
+    __, response = app.test_client.post(
         "/list", data=json.dumps({"test": ["one", "two", "three"]})
     )
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": ["one", "two", "three"]}
+    assert response.status == 200
+    assert response.json == {"test": ["one", "two", "three"]}
 
 
-async def test_parse_string_list_also_works_with_singular(test_cli):
-    resp = await test_cli.post("/list", data=json.dumps({"test": "not a datetime"}))
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": ["not a datetime"]}
+def test_parse_string_list_also_works_with_singular(app):
+    __, response = app.test_client.post("/list", data=json.dumps({"test": "not a datetime"}))
+    assert response.status == 200
+    assert response.json == {"test": ["not a datetime"]}
 
 
-async def test_parse_list_also_works_with_singular(test_cli):
-    resp = await test_cli.post("/list", data=json.dumps({"test": ["not a datetime"]}))
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": ["not a datetime"]}
+def test_parse_list_also_works_with_singular(app):
+    __, response = app.test_client.post("/list", data=json.dumps({"test": ["not a datetime"]}))
+    assert response.status == 200
+    assert response.json == {"test": ["not a datetime"]}
 
 
-async def test_all_at_once(test_cli):
-    resp = await test_cli.post(
+def test_all_at_once(app):
+    __, response = app.test_client.post(
         "/all",
         data=json.dumps(
             {
@@ -215,9 +204,8 @@ async def test_all_at_once(test_cli):
             }
         ),
     )
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == dict(
+    assert response.status == 200
+    assert response.json == dict(
         a=10,
         b="test",
         c="2017-10-10T10:10:10",
@@ -226,29 +214,26 @@ async def test_all_at_once(test_cli):
     )
 
 
-async def test_optional(test_cli):
-    resp = await test_cli.post("/optional")
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": "helloworld"}
+def test_optional(app):
+    __, response = app.test_client.post("/optional")
+    assert response.status == 200
+    assert response.json == {"test": "helloworld"}
 
 
-async def test_mandatory(test_cli):
-    resp = await test_cli.post("/str")
-    assert resp.status == 400
+def test_mandatory(app):
+    __, response = app.test_client.post("/str")
+    assert response.status == 400
 
 
-async def test_with_path_params(test_cli):
-    resp = await test_cli.post(
+def test_with_path_params(app):
+    __, response = app.test_client.post(
         "/with/123/path_params", data=json.dumps({"test": "hello"})
     )
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"path_param": 123, "test": "hello", "test_2": 35}
+    assert response.status == 200
+    assert response.json == {"path_param": 123, "test": "hello", "test_2": 35}
 
 
-async def test_args_success(test_cli):
-    resp = await test_cli.post("/test_arg", data=json.dumps({"test": 10}))
-    assert resp.status == 200
-    resp_json = await resp.json()
-    assert resp_json == {"test": 10}
+def test_args_success(app):
+    __, response = app.test_client.post("/test_arg", data=json.dumps({"test": 10}))
+    assert response.status == 200
+    assert response.json == {"test": 10}
