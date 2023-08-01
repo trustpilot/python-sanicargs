@@ -1,13 +1,13 @@
-import inspect
-from functools import wraps
-import ciso8601
 import datetime
+import inspect
 import json
-
-from sanic.exceptions import BadRequest
-from sanicargs.fields import List
-
+from functools import wraps
 from logging import getLogger
+
+import ciso8601
+from sanic.exceptions import BadRequest
+
+from sanicargs.fields import List
 
 __logger = getLogger("sanicargs")
 
@@ -49,12 +49,12 @@ __type_deserializers = {
 def parse_parameters(func):
     """parses query or body parameters depending on http method, validates and deserializes them
     VERY IMPORTANT!:
-    to use this decorator it must be used in a Sanic endpoint and used BEFORE the 
+    to use this decorator it must be used in a Sanic endpoint and used BEFORE the
     sanic blueprint decorator like so:
         @blueprint.route("/foo/<businessunitid>/bar")
         @authorize_business_unit
         @parse_parameters
-    and the signature of the function needs to start with request and the rest of 
+    and the signature of the function needs to start with request and the rest of
     the parameters need type hints like so:
         async def generate_csv(request, query: str, businessunitid: str):
     """

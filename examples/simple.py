@@ -1,5 +1,7 @@
 import datetime
+
 from sanic import Sanic, response
+
 from sanicargs import parse_parameters
 
 app = Sanic("test_sanic_app")

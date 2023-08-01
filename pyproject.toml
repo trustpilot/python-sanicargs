@@ -31,6 +31,9 @@ pytest = "^7.4.0"
 pytest-asyncio = "^0.21.1"
 sanic-testing = "^23.6.0"
 
+[tool.isort]
+profile = "black"
+
 [build-system]
 requires = ["poetry>=1.1.4"]
 build-backend = "poetry.masonry.api"

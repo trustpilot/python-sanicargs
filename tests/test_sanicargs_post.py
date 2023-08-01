@@ -1,18 +1,15 @@
-import uuid
-
-import pytest
-from sanic import response, Sanic
-from sanic_testing import TestManager
-
-from sanicargs import parse_parameters, fields
-from sanic.server.protocols.websocket_protocol import WebSocketProtocol
-from sanic import request
-
 import datetime
-
-from functools import wraps
 import inspect
 import json
+import uuid
+from functools import wraps
+
+import pytest
+from sanic import Sanic, request, response
+from sanic.server.protocols.websocket_protocol import WebSocketProtocol
+from sanic_testing import TestManager
+
+from sanicargs import fields, parse_parameters
 
 
 def has_test_arg(func):
@@ -94,7 +91,6 @@ def app():
     return app
 
 
-
 #########
 # Tests #
 #########
@@ -107,7 +103,9 @@ def test_parse_int_success(app):
 
 
 def test_parse_int_fail(app):
-    __, response = app.test_client.post("/int", data=json.dumps({"test": "not an integer"}))
+    __, response = app.test_client.post(
+        "/int", data=json.dumps({"test": "not an integer"})
+    )
     assert response.status == 400
 
 
@@ -124,7 +122,9 @@ def test_parse_bool_false_success(app):
 
 
 def test_parse_bool_fail(app):
-    __, response = app.test_client.post("/bool", data=json.dumps({"test": "not an bool"}))
+    __, response = app.test_client.post(
+        "/bool", data=json.dumps({"test": "not an bool"})
+    )
     assert response.status == 400
 
 
@@ -135,8 +135,7 @@ def test_parse_str_success(app):
 
 
 def test_parse_str_also_works_with_int(app):
-    """ allow strings to work as ints
-    """
+    """allow strings to work as ints"""
     __, response = app.test_client.post("/str", data=json.dumps({"test": "400"}))
     assert response.status == 200
 
@@ -150,23 +149,31 @@ def test_parse_datetime_success(app):
 
 
 def test_parse_datetime_fail(app):
-    __, response = app.test_client.post("/datetime", data=json.dumps({"test": "not a datetime"}))
+    __, response = app.test_client.post(
+        "/datetime", data=json.dumps({"test": "not a datetime"})
+    )
     assert response.status == 400
 
 
 def test_parse_date_success(app):
-    __, response = app.test_client.post("/date", data=json.dumps({"test": "2017-10-19"}))
+    __, response = app.test_client.post(
+        "/date", data=json.dumps({"test": "2017-10-19"})
+    )
     assert response.status == 200
     assert response.json == {"test": "2017-10-19"}
 
 
 def test_parse_date_fail(app):
-    __, response = app.test_client.post("/date", data=json.dumps({"test": "not a datetime"}))
+    __, response = app.test_client.post(
+        "/date", data=json.dumps({"test": "not a datetime"})
+    )
     assert response.status == 400
 
 
 def test_parse_string_list_success(app):
-    __, response = app.test_client.post("/list", data=json.dumps({"test": "one,two,three"}))
+    __, response = app.test_client.post(
+        "/list", data=json.dumps({"test": "one,two,three"})
+    )
     assert response.status == 200
     assert response.json == {"test": ["one", "two", "three"]}
 
@@ -180,13 +187,17 @@ def test_parse_list_success(app):
 
 
 def test_parse_string_list_also_works_with_singular(app):
-    __, response = app.test_client.post("/list", data=json.dumps({"test": "not a datetime"}))
+    __, response = app.test_client.post(
+        "/list", data=json.dumps({"test": "not a datetime"})
+    )
     assert response.status == 200
     assert response.json == {"test": ["not a datetime"]}
 
 
 def test_parse_list_also_works_with_singular(app):
-    __, response = app.test_client.post("/list", data=json.dumps({"test": ["not a datetime"]}))
+    __, response = app.test_client.post(
+        "/list", data=json.dumps({"test": ["not a datetime"]})
+    )
     assert response.status == 200
     assert response.json == {"test": ["not a datetime"]}
 

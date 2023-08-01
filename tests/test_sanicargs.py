@@ -1,17 +1,14 @@
+import datetime
+import inspect
 import uuid
+from functools import wraps
 
 import pytest
-from sanic import response, Sanic
+from sanic import Sanic, request, response
+from sanic.server.protocols.websocket_protocol import WebSocketProtocol
 from sanic_testing import TestManager
 
-from sanicargs import parse_parameters, fields
-from sanic.server.protocols.websocket_protocol import WebSocketProtocol
-from sanic import request
-
-import datetime
-
-from functools import wraps
-import inspect
+from sanicargs import fields, parse_parameters
 
 
 def has_test_arg(func):
@@ -28,7 +25,7 @@ def has_test_arg(func):
 @pytest.fixture
 def app():
     app = Sanic(f"app_{uuid.uuid4().hex}")
-    TestManager(app)    
+    TestManager(app)
 
     @app.route("/int", methods=["GET"])
     @parse_parameters
@@ -98,7 +95,6 @@ def app():
 #########
 
 
-
 def test_parse_int_success(app):
     __, response = app.test_client.get("/int?test=10")
 
@@ -136,8 +132,7 @@ def test_parse_str_success(app):
 
 
 def test_parse_str_also_works_with_int(app):
-    """ there is no way of knowing if an str is really an integer
-    """
+    """there is no way of knowing if an str is really an integer"""
     __, response = app.test_client.get("/str?test=400")
     assert response.status == 200
 
