@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sanicargs"
-version = "3.0.0"
+version = "3.0.1"
 description = "Parses query args or body parameters in sanic using type annotations"
 readme = "README.md"
 keywords = ["sanicargs", "sanic", "query", "args", "type annotations"]
