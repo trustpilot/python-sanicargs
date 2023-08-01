@@ -5,8 +5,7 @@ description = "Parses query args or body parameters in sanic using type annotati
 readme = "README.md"
 keywords = ["sanicargs", "sanic", "query", "args", "type annotations"]
 authors = [
-    "Johannes Valbjørn <jgv@trustpilot.com>",
-    "Thomas Thiebaud <tht@trustpilot.com>"
+    "John Sutherland <johns@trustpilot.com>",
 ]
 repository = "https://github.com/trustpilot/python-sanicargs"
 classifiers = [
