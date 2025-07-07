@@ -702,14 +702,14 @@ files = [
 
 [[package]]
 name = "tracerite"
-version = "1.1.3"
+version = "1.1.0"
 description = "Human-readable HTML tracebacks for Python exceptions"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "tracerite-1.1.3-py3-none-any.whl", hash = "sha256:811d8e2e0fb563b77340eebe2e9f7b324acfe01e09ea58db8bcaecb24327c823"},
-    {file = "tracerite-1.1.3.tar.gz", hash = "sha256:119fc006f240aa03fffb41cf99cf82fda5c0449c7d4b6fe42c6340403578b31e"},
+    {file = "tracerite-1.1.0-py3-none-any.whl", hash = "sha256:4cccac04db05eeeabda45e72b57199e147fa2f73cf64d89cfd625df321bd2ab6"},
+    {file = "tracerite-1.1.0.tar.gz", hash = "sha256:041dab8fd4bb405f73506293ac7438a2d311e5f9044378ba7d9a6540392f9e4b"},
 ]
 
 [package.dependencies]
@@ -969,4 +969,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.8"
-content-hash = "35bf42bbcf7f9b2cfea70c72c77a8082cf4ef968d5179aa3bd1cee932bc3d03b"
+content-hash = "eee9fc19a1006141485525b87a99ea59f194a129954c8168fb384db7c9de47b6"
