@@ -1,0 +1,54 @@
+name: Build and release
+
+'on':
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install poetry
+        run: |
+          pip install --upgrade pip
+          pip install poetry
+          python -V
+          pip -V
+          poetry -V
+          poetry config virtualenvs.create false
+        shell: bash
+
+      - name: poetry install
+        run: poetry install --verbose
+        shell: bash
+
+      - name: Lint
+        run: poetry run black --check .
+        shell: bash
+
+      - name: Test
+        run: poetry run pytest -vvv tests
+        shell: bash
